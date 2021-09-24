@@ -1,0 +1,20 @@
+rm Radix.txt
+rm Bucket.txt
+rm Radix_total.txt
+rm Bucket_total.txt
+rm RadixSpeedup.txt
+rm BucketSpeedup.txt
+rm final
+ awk -F "," '{sum+=$10;count++;if(count == 5){sum=sum/5;print sum;sum=0;count=0;}}' 100mill_SD_N_2^30_V100.csv >> Radix.txt
+ awk -F "," '{sum+=$13;count++;if(count == 5){sum=sum/5;print sum;sum=0;count=0;}}' 100mill_SD_N_2^30_V100.csv >> Bucket.txt
+
+ 
+ awk -F ";" '{sum+=$11;count++;if(count == 1){sum=sum/1;print sum;sum=0;count=0;}}' /home/anil/topk_20/DrTopK/baseline+filter+beta+shuffle/FirstTopK3DigitsSkipped_NORMAL_ALL_K.csv >> Radix_total.txt
+ awk -F ";" '{sum+=$10;count++;if(count == 1){sum=sum/1;print sum;sum=0;count=0;}}' /home/anil/topk_20/DrTopK/bucket_select/BucketSelect_Few_Digits.csv >> Bucket_total.txt
+
+
+paste Radix.txt Radix_total.txt | awk '{print $1/$2}' >> RadixSpeedup.txt
+paste Bucket.txt Bucket_total.txt | awk '{print $1/$2}' >> BucketSpeedup.txt
+
+paste RadixSpeedup.txt BucketSpeedup.txt | awk '{print $1,$2}' >> final
+
